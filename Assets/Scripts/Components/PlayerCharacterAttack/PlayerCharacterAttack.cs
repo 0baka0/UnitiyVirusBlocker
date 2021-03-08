@@ -34,6 +34,8 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     {
         PlayerMissile CreateMissileObject() => Instantiate(_PlayerMissilePrefab);
 
+
+
         // 공격용 조이스틱을 얻습니다.
         var attackJoystick = (_PlayerableCharacter.playerController as PlayerController).attackJoystick;
 
@@ -45,7 +47,9 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 
         newLeftPlayerMissile.Fire(_MissileFireLeftPos.position,
             _MissileFireLeftPos.forward, 10);
-        newRightPlayerMissile.Fire(_MissileFireRightPos.position,
-            _MissileFireRightPos.forward, 10);
+        newLeftPlayerMissile.Fire(_MissileFireRightPos.position,
+            _MissileFireLeftPos.forward, 10);
     }
+
+
 }
