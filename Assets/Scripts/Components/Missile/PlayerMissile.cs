@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStartUpFramework;
 
 // 플레이어 캐릭터가 발사하는 미사일을 나타내기 위함
 [RequireComponent(typeof(ProjectileMovement))]
-public class PlayerMissile : MonoBehaviour
+public class PlayerMissile : MonoBehaviour,
+    IObjectPoolable
 {
     [SerializeField] private Transform _MissileMeshTransform;
 
-
+    // 미사일 발사 위치
+    private Vector3 _InitialPosition;
 
     // 함께 사용되는 projectileMovement Component 를 나타냅니다.
     public ProjectileMovement projrctileMovement { get; private set; }
+
+    public bool canRecyclable { get; set; }
+    public System.Action onRecycleStartEvent { get; set; }
 
     private void Awake()
     {
@@ -20,7 +26,21 @@ public class PlayerMissile : MonoBehaviour
 
     private void Update()
     {
+        // 미사일이 이동한 거리를 확인합니다.
+        if (Vector3.Distance(_InitialPosition, transform.position) > 10.0f)
+            DisibleMissile();
+
         RotatingMissileMesh();
+    }
+
+    // 미사일 오브젝트를 비활성화 시킵니다.
+    private void DisibleMissile()
+    {
+        // 오브젝트를 재활용 가능한 상태로 설정합니다.
+        canRecyclable = true;
+
+        // 오브젝트 비활성화
+        gameObject.SetActive(false);
     }
 
     // 미사일 Yaw 회전을 구현합니다.
@@ -35,7 +55,10 @@ public class PlayerMissile : MonoBehaviour
     public void Fire(Vector3 initialPosition, Vector3 direction, float speed)
     {
         // 오브젝트 위치를 초기 위치로 설정합니다.
-        transform.position = initialPosition;
+        transform.position = _InitialPosition = initialPosition;
+
+        // 오브젝트 활성화
+        gameObject.SetActive(true);
 
         // 투사체 이동 컴포넌트의 내용을 초기화합니다.
         projrctileMovement.projectileDirection = direction;
