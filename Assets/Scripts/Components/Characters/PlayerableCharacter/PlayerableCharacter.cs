@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStartupFramework;
 
-public sealed class PlayerableCharacter : PlayerableCharacterBase,
-    HealthPointable
+public sealed class PlayerableCharacter : PlayerableCharacterBase, HealthPointable
 {
     // 적 캐릭터 최대 체력을 나타냅니다.
     [SerializeField] private float _MaxHp = 100.0f;
     // 적 캐릭터 체력을 나타냅니다.
     [SerializeField] private float _Hp = 100.0f;
+
+    public new Collider collider { get; private set; }
 
     public float maxHp => _MaxHp;
     public float hp => _Hp;
@@ -17,18 +18,13 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
     private void Awake()
     {
         idCollider = GetComponent<CharacterController>();
-        tag = "Player";
-
-        OnTakeAnyDamage += (damagerCauser, componentCauser, damage) =>
-            Debug.Log("damage = " + damage);
     }
 
     protected override void Update()
     {
         base.Update();
 
-        Debug.Log("allocated Character Count = " + 
-            SceneManager.Instance.sceneInstance.allocatedCharacters.Count);
+        (SceneManager.Instance.sceneInstance as GameSceneInstance).trackingCamera;
     }
 
     public override void OnControllerConnected(PlayerControllerBase connectedController)

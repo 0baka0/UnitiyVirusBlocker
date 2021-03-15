@@ -4,5 +4,5 @@
 public interface HealthPointable
 {
     float maxHp { get; }
-    float hp { get; }
+    float Hp { get; }
 }
