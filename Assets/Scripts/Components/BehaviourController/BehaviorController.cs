@@ -39,7 +39,7 @@ public sealed class BehaviorController : MonoBehaviour
 
         // 행동 시작을 허용할 때까지 대기합니다.
         WaitUntil waitAllowBehaviorStarted = new WaitUntil(
-            () => _NextBehavior.allowStartBehavior);
+            () => _NextBehavior.allowBehaviorStard);
         // 행동이 끝날 때까지 대기합니다.
         WaitUntil waitBehaviorFinished = new WaitUntil(
             () => _NextBehavior.behaviorFinished);
