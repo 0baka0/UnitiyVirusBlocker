@@ -474,6 +474,7 @@ MonoBehaviour:
   _MoveSpeed: 4
   _UseYawRotation: 1
   _DirectionUpdateDelay: 3
+  _MaxTrackingTime: 0
 --- !u!114 &261588440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -814,6 +815,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1105549818}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1179384638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1179384639}
+  m_Layer: 0
+  m_Name: MissileFirePosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1179384639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179384638}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1236142356}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1195753498
 GameObject:
   m_ObjectHideFlags: 0
@@ -919,6 +950,8 @@ GameObject:
   - component: {fileID: 1236142353}
   - component: {fileID: 1236142352}
   - component: {fileID: 1236142357}
+  - component: {fileID: 1236142358}
+  - component: {fileID: 1236142359}
   m_Layer: 0
   m_Name: Enemy 3
   m_TagString: Untagged
@@ -943,6 +976,7 @@ MonoBehaviour:
   _MoveSpeed: 5
   _UseYawRotation: 0
   _DirectionUpdateDelay: 0.3
+  _MaxTrackingTime: 2
 --- !u!114 &1236142353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,10 +1025,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236142351}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 0, z: 0}
+  m_LocalPosition: {x: -4.66, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 975764047}
+  - {fileID: 1179384639}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1017,6 +1052,34 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1236142358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236142351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2970e3f790835742831ea3cdc7a5ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BehaivorBeginDelay: 1
+  m_BehaivorFinalDelay: 1
+  _MissileCount: 8
+  _MissileFirePosition: {fileID: 1179384639}
+--- !u!114 &1236142359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236142351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7811813e1483d43afe90efce746ab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1250330463
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,6 +1313,7 @@ MonoBehaviour:
   _MoveSpeed: 3
   _UseYawRotation: 1
   _DirectionUpdateDelay: 1
+  _MaxTrackingTime: 0
 --- !u!114 &1440400944
 MonoBehaviour:
   m_ObjectHideFlags: 0

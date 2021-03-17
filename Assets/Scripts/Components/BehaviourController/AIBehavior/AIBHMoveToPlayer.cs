@@ -16,6 +16,9 @@ public sealed class AIBHMoveToPlayer :
     [Header("방향 갱신 지연 시간")]
     [SerializeField] private float _DirectionUpdateDelay;
 
+    [Header("추적 최대 시간(0 이라면 계속 추적합니다.)")]
+    [SerializeField] private float _MaxTrackingTime;
+
     // 마지막 방향 갱신 시간
     private float _LastDirectionUpdateTime;
 
@@ -27,6 +30,9 @@ public sealed class AIBHMoveToPlayer :
 
     // 목표 이동 방향
     private Vector3 _TargetMoveDirection;
+
+    // 추적 시작 시간을 나타냅니다.
+    private float _TrackingStartTime;
 
     protected void Start()
     {
@@ -69,6 +75,8 @@ public sealed class AIBHMoveToPlayer :
 
     public override void Run()
     {
+        // 추적 시작 시간 설정
+        _TrackingStartTime = Time.time;
 
         IEnumerator Behavior()
         {
@@ -77,11 +85,13 @@ public sealed class AIBHMoveToPlayer :
                 // 플레이어 캐릭터와 거리가 가깝다면 행동 종료
                 if (Vector3.Distance(transform.position, _PlayerableCharacter.transform.position) < 0.1f)
                     break;
+                else if (Mathf.Approximately(_MaxTrackingTime, 0.0f) ? false :
+                    (Time.time - _TrackingStartTime >= _MaxTrackingTime))
+                    break;
                 else
                 {
                     transform.Translate(_MoveDirection * _MoveSpeed * Time.deltaTime, Space.World);
                 }
-
                 yield return null;
             }
 

@@ -14,23 +14,23 @@ public class PlayerMissile : MonoBehaviour,
     private Vector3 _InitialPosition;
 
     // 함께 사용되는 projectileMovement Component 를 나타냅니다.
-    public ProjectileMovement projrctileMovement { get; private set; }
+    public ProjectileMovement projectileMovement { get; private set; }
 
     public bool canRecyclable { get; set; }
     public System.Action onRecycleStartEvent { get; set; }
 
     private void Awake()
     {
-        projrctileMovement = GetComponent<ProjectileMovement>();
+        projectileMovement = GetComponent<ProjectileMovement>();
 
         // 투사체가 감지할 오브젝트 레이어를 지정합니다.
-        projrctileMovement.detectableLayer = (1 << LayerMask.NameToLayer("Enemy"));
+        projectileMovement.detectableLayer = (1 << LayerMask.NameToLayer("Enemy"));
 
         // 투사체 반지름 설정
-        projrctileMovement.projectileRadius = 0.1f;
+        projectileMovement.projectileRadius = 0.1f;
 
         // 투사체 겹침시 실행할 내용을 정의합니다.
-        projrctileMovement.onProjectileOverlapped += (Collider collider) =>
+        projectileMovement.onProjectileOverlapped += (Collider collider) =>
         {
             Debug.Log(collider.gameObject.name);
         };
@@ -73,8 +73,8 @@ public class PlayerMissile : MonoBehaviour,
         gameObject.SetActive(true);
 
         // 투사체 이동 컴포넌트의 내용을 초기화합니다.
-        projrctileMovement.projectileDirection = direction;
-        projrctileMovement.projectileSpeed = speed;
+        projectileMovement.projectileDirection = direction;
+        projectileMovement.projectileSpeed = speed;
     }
 
 
