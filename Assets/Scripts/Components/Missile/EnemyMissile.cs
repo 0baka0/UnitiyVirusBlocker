@@ -1,48 +1,88 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStartupFramework;
 using UnityStartUpFramework;
 
 [RequireComponent(typeof(ProjectileMovement))]
 public class EnemyMissile : MonoBehaviour,
-    IObjectPoolable
+	IObjectPoolable
 {
-    private float _MissileSpeed;
+	[Header("미사일 속력")]
+	[SerializeField] private float _MissileSpeed = 2.0f;
 
-    private ProjectileMovement _ProjectileMovement;
+	private ProjectileMovement _ProjectileMovement;
 
-    // 초기 위치를 나타냅니다.
-    private Vector3 _InitialPosition;
+	private ParticleInstance _EnemeyMissileHitPrefab;
 
-    public bool canRecyclable { get; set; }
-    public System.Action onRecycleStartEvent { get; set; }
+	// 초기 위치를 나타냅니다.
+	private Vector3 _InitialPosition;
 
-    private void Awake()
+	// 이 미사일을 발사한 적 캐릭터
+	private EnemyCharacter _EnemyCharacter;
+
+	private WaitUntil waitMissileDisable;
+
+	public bool canRecyclable { get; set; }
+	public Action onRecycleStartEvent { get; set; }
+
+	private void Awake()
+	{
+		_EnemeyMissileHitPrefab = ResourceManager.Instance.LoadResource<GameObject>(
+			"EnemyMissileHit",
+			"Prefabs/ParticleInstances/EnemyMissileHit").GetComponent<ParticleInstance>();
+
+		_ProjectileMovement = GetComponent<ProjectileMovement>();
+		waitMissileDisable = new WaitUntil(() => (Vector3.Distance(_InitialPosition, transform.position) > 30));
+
+		_ProjectileMovement.detectableLayer = 1 << LayerMask.NameToLayer("PlayerableCharacter");
+		_ProjectileMovement.onProjectileOverlapped += (collider, projectilePosition) =>
+		{
+			var sceneInstance = SceneManager.Instance.sceneInstance as GameSceneInstance;
+
+			// 플레이어블 캐릭터에게 피해를 가합니다.
+			sceneInstance.allocatedCharacters[collider].ApplyDamage(
+				_EnemyCharacter, this, 20.0f);
+
+			// 파티클 인스턴스 생성
+			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit)
+				sceneInstance.particlePool.RegisterRecyclableObject(
+					Instantiate(_EnemeyMissileHitPrefab));
+
+			// 파티클 인스턴스 위치 설정
+
+			// 파티클 재생
+
+			// 미사일 비활성화
+			DisableMissile();
+		};
+	}
+
+	private void DisableMissile()
     {
-        _ProjectileMovement = GetComponent<ProjectileMovement>();
+		canRecyclable = true;
+		gameObject.SetActive(false);
     }
 
-    private void Update()
-    {
-        if (Vector3.Distance(_InitialPosition, transform.position) > 10.0f)
-            DisibleMissile();
-    }
+	public void Fire(EnemyCharacter enemyCharacter, Vector3 initialPosition, Vector3 direction)
+	{
+		IEnumerator WaitMissileDisable()
+        {
+			yield return waitMissileDisable;
 
-    private void DisibleMissile()
-    {
-        canRecyclable = true;
+			canRecyclable = true;
+        }
 
-        gameObject.SetActive(false);
-    }
+		gameObject.SetActive(true);
 
-    public void Fire(Vector3 initialPosition, Vector3 direction)
-    {
-        transform.position = _InitialPosition = initialPosition;
+		_EnemyCharacter = enemyCharacter;
 
-        gameObject.SetActive(true);
+		transform.position = _InitialPosition = initialPosition;
 
-        _ProjectileMovement.projectileDirection = direction;
-        _ProjectileMovement.projectileSpeed = _MissileSpeed;
-    }
+		_ProjectileMovement.projectileDirection = direction;
+		_ProjectileMovement.projectileSpeed = _MissileSpeed;
 
+		StartCoroutine(WaitMissileDisable());
+	}
 }
