@@ -43,7 +43,7 @@ public sealed class AIBHFireMissile:
 			{
 				// 미사일 생성
 				var enemyMissile = _MissilePool.GetRecycleObject() ??
-					_MissilePool.RegisterRecyclableObject(Instantiate(_EnemyMissilePrefab);
+					_MissilePool.RegisterRecyclableObject(Instantiate(_EnemyMissilePrefab));
 
 				_MissileFirePosition.localEulerAngles = Vector3.up * (addYawAngle * i);
 				Debug.Log(_MissileFirePosition.localEulerAngles.y);

@@ -46,13 +46,15 @@ public class EnemyMissile : MonoBehaviour,
 				_EnemyCharacter, this, 20.0f);
 
 			// 파티클 인스턴스 생성
-			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit)
+			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit) ??
 				sceneInstance.particlePool.RegisterRecyclableObject(
 					Instantiate(_EnemeyMissileHitPrefab));
 
 			// 파티클 인스턴스 위치 설정
+			hitParticle.transform.position = projectilePosition;
 
 			// 파티클 재생
+			hitParticle.PlayParticle();
 
 			// 미사일 비활성화
 			DisableMissile();
