@@ -3,5 +3,13 @@
 public enum ParticleInstanceType
 { 
     PlayerMissileHit,
-    EnemyMissileHit
+    EnemyMissileHit,
+    CharacterDie
+}
+
+public enum EnemyType
+{
+    Enemy1,
+    Enemy2,
+    Enemy3
 }

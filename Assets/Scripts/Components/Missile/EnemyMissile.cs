@@ -14,7 +14,7 @@ public class EnemyMissile : MonoBehaviour,
 
 	private ProjectileMovement _ProjectileMovement;
 
-	private ParticleInstance _EnemeyMissileHitPrefab;
+	private ParticleInstance _EnemyMissileHitPrefab;
 
 	// 초기 위치를 나타냅니다.
 	private Vector3 _InitialPosition;
@@ -29,12 +29,12 @@ public class EnemyMissile : MonoBehaviour,
 
 	private void Awake()
 	{
-		_EnemeyMissileHitPrefab = ResourceManager.Instance.LoadResource<GameObject>(
+		_EnemyMissileHitPrefab = ResourceManager.Instance.LoadResource<GameObject>(
 			"EnemyMissileHit",
 			"Prefabs/ParticleInstances/EnemyMissileHit").GetComponent<ParticleInstance>();
 
 		_ProjectileMovement = GetComponent<ProjectileMovement>();
-		waitMissileDisable = new WaitUntil(() => (Vector3.Distance(_InitialPosition, transform.position) > 30));
+		waitMissileDisable = new WaitUntil(() => (Vector3.Distance(_InitialPosition, transform.position) > 30.0f));
 
 		_ProjectileMovement.detectableLayer = 1 << LayerMask.NameToLayer("PlayerableCharacter");
 		_ProjectileMovement.onProjectileOverlapped += (collider, projectilePosition) =>
@@ -48,7 +48,7 @@ public class EnemyMissile : MonoBehaviour,
 			// 파티클 인스턴스 생성
 			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit) ??
 				sceneInstance.particlePool.RegisterRecyclableObject(
-					Instantiate(_EnemeyMissileHitPrefab));
+					Instantiate(_EnemyMissileHitPrefab));
 
 			// 파티클 인스턴스 위치 설정
 			hitParticle.transform.position = projectilePosition;
@@ -61,20 +61,22 @@ public class EnemyMissile : MonoBehaviour,
 		};
 	}
 
-	private void DisableMissile()
-    {
+	public void DisableMissile()
+	{
 		canRecyclable = true;
-		gameObject.SetActive(false);
-    }
+		if (!_EnemyCharacter)
+			gameObject.SetActive(false);
+		else Destroy(gameObject);
+	}
 
 	public void Fire(EnemyCharacter enemyCharacter, Vector3 initialPosition, Vector3 direction)
 	{
 		IEnumerator WaitMissileDisable()
-        {
+		{
 			yield return waitMissileDisable;
 
-			canRecyclable = true;
-        }
+			DisableMissile();
+		}
 
 		gameObject.SetActive(true);
 
@@ -87,4 +89,5 @@ public class EnemyMissile : MonoBehaviour,
 
 		StartCoroutine(WaitMissileDisable());
 	}
+
 }

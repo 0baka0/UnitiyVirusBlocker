@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 플레이어 캐릭터를 향해 이동하는 행동
-public sealed class AIBHMoveToPlayer : 
+public sealed class AIBHMoveToPlayer :
 	AIBehaviorBase
 {
-	[Range(0.1f, 10.0f)] [Header("이동 속력")]
+	[Range(0.1f, 10.0f)]
+	[Header("이동 속력")]
 	[SerializeField] private float _MoveSpeed = 0.3f;
 
 	[Header("Yaw 회전 사용")]
@@ -33,11 +34,13 @@ public sealed class AIBHMoveToPlayer :
 	// 추적 시작 시간을 나타냅니다.
 	private float _TrackingStartTime;
 
+	private IEnumerator _Behaivor;
+
 	private void Start()
 	{
 		_LastDirectionUpdatedTime = Time.time - _DirectionUpdateDelay;
 
-		_PlayerableCharacter = 
+		_PlayerableCharacter =
 			PlayerManager.Instance.playerController.playerableCharacter as PlayerableCharacter;
 	}
 
@@ -60,6 +63,12 @@ public sealed class AIBHMoveToPlayer :
 	// 이동 방향을 갱신합니다.
 	private void UpdateDirection()
 	{
+		if (_PlayerableCharacter == null)
+		{
+			_TargetMoveDirection = Vector3.zero;
+			return;
+		}
+
 		if (Time.time - _LastDirectionUpdatedTime >= _DirectionUpdateDelay)
 		{
 			_LastDirectionUpdatedTime = Time.time;
@@ -74,7 +83,6 @@ public sealed class AIBHMoveToPlayer :
 
 	public override void Run()
 	{
-
 		IEnumerator Behavior()
 		{
 			// 추적 시작 시간 설정
@@ -82,10 +90,13 @@ public sealed class AIBHMoveToPlayer :
 
 			while (true)
 			{
+				if (_PlayerableCharacter == null)
+					behaviorController.StopBehaivor();
+
 				// 플레이어 캐릭터와의 거리가 가깝다면 행동 종료
-				if (Vector3.Distance(transform.position, _PlayerableCharacter.transform.position) < 0.01f)
+				else if (Vector3.Distance(transform.position, _PlayerableCharacter.transform.position) < 0.01f)
 					break;
-				else if (Mathf.Approximately(_MaxTrackingTime, 0.0f) ? false : 
+				else if (Mathf.Approximately(_MaxTrackingTime, 0.0f) ? false :
 					(Time.time - _TrackingStartTime >= _MaxTrackingTime))
 					break;
 				else
@@ -100,8 +111,11 @@ public sealed class AIBHMoveToPlayer :
 			behaviorFinished = true;
 		}
 
-		StartCoroutine(Behavior());
+		StartCoroutine(_Behaivor = Behavior());
 	}
 
-
+	public override void StopBehaivor()
+	{
+		StopCoroutine(_Behaivor);
+	}
 }

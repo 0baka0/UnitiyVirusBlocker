@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // AI 행동 객체를 만들기 위한 기반 타입
-public abstract class AIBehaviorBase:
+public abstract class AIBehaviorBase :
 	MonoBehaviour
 {
 	[Header("행동 시작 / 끝 지연 시간")]
@@ -28,12 +28,11 @@ public abstract class AIBehaviorBase:
 	public BehaviorController behaviorController { get; private set; }
 
 	public float behaivorBeginDelay => m_BehaivorBeginDelay;
-	public float behaivorFinalDelay => m_BehaivorFinalDelay; 
+	public float behaivorFinalDelay => m_BehaivorFinalDelay;
 
 	protected virtual void Awake()
 	{
 		behaviorController = GetComponent<BehaviorController>();
-
 
 		// 기본적으로 행동 시작을 허용하도록 합니다.
 		onBehaviorStarted = () => allowStartBehavior = true;
@@ -46,4 +45,7 @@ public abstract class AIBehaviorBase:
 
 	// 행동
 	public abstract void Run();
+
+	// 행동 중지
+	public virtual void StopBehaivor() { }
 }
