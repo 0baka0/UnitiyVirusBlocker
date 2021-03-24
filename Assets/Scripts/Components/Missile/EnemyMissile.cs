@@ -14,8 +14,6 @@ public class EnemyMissile : MonoBehaviour,
 
 	private ProjectileMovement _ProjectileMovement;
 
-	private ParticleInstance _EnemyMissileHitPrefab;
-
 	// 초기 위치를 나타냅니다.
 	private Vector3 _InitialPosition;
 
@@ -29,10 +27,6 @@ public class EnemyMissile : MonoBehaviour,
 
 	private void Awake()
 	{
-		_EnemyMissileHitPrefab = ResourceManager.Instance.LoadResource<GameObject>(
-			"EnemyMissileHit",
-			"Prefabs/ParticleInstances/EnemyMissileHit").GetComponent<ParticleInstance>();
-
 		_ProjectileMovement = GetComponent<ProjectileMovement>();
 		waitMissileDisable = new WaitUntil(() => (Vector3.Distance(_InitialPosition, transform.position) > 30.0f));
 
@@ -45,17 +39,6 @@ public class EnemyMissile : MonoBehaviour,
 			sceneInstance.allocatedCharacters[collider].ApplyDamage(
 				_EnemyCharacter, this, 20.0f);
 
-			// 파티클 인스턴스 생성
-			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit) ??
-				sceneInstance.particlePool.RegisterRecyclableObject(
-					Instantiate(_EnemyMissileHitPrefab));
-
-			// 파티클 인스턴스 위치 설정
-			hitParticle.transform.position = projectilePosition;
-
-			// 파티클 재생
-			hitParticle.PlayParticle();
-
 			// 미사일 비활성화
 			DisableMissile();
 		};
@@ -64,8 +47,9 @@ public class EnemyMissile : MonoBehaviour,
 	public void DisableMissile()
 	{
 		canRecyclable = true;
-		if (!_EnemyCharacter)
-			gameObject.SetActive(false);
+
+		if (_EnemyCharacter)
+			gameObject?.SetActive(false);
 		else Destroy(gameObject);
 	}
 
@@ -89,5 +73,4 @@ public class EnemyMissile : MonoBehaviour,
 
 		StartCoroutine(WaitMissileDisable());
 	}
-
 }

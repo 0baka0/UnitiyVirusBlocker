@@ -4,5 +4,10 @@ using UnityEngine;
 
 public sealed class GameManager : GameManagerBase
 {
-    
+    protected override void InitializeManagerClasses()
+    {
+        base.InitializeManagerClasses();
+
+        RegisterManagerClass<AudioManager>();
+    }
 }

@@ -18,6 +18,9 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 	private float _LastInvincibleTime;
 
 	private ParticleInstance _DieParticlePrefab;
+	private ParticleInstance _EnemyMissileHitPrefab;
+	private AudioClip _PlayerDieSound;
+	private AudioClip _PlayerDamageSound;
 
 	public float maxHp => _MaxHp;
 	public float hp => _Hp;
@@ -31,6 +34,18 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 			"CharacterDie",
 			"Prefabs/ParticleInstances/CharacterDie").GetComponent<ParticleInstance>();
 
+		_EnemyMissileHitPrefab = ResourceManager.Instance.LoadResource<GameObject>(
+			"EnemyMissileHit",
+			"Prefabs/ParticleInstances/EnemyMissileHit").GetComponent<ParticleInstance>();
+
+		_PlayerDieSound = ResourceManager.Instance.LoadResource<AudioClip>(
+			"Player_Missile_Hit",
+			"Sound/Player_Missile_Hit");
+
+		_PlayerDamageSound = ResourceManager.Instance.LoadResource<AudioClip>(
+			"GetDamaged",
+			"Sound / GetDamaged");
+
 		idCollider = GetComponent<CharacterController>();
 		tag = "Player";
 
@@ -43,6 +58,19 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 			// 마지막으로 피해를 입은 시간을 저장합니다.
 			_LastInvincibleTime = Time.time;
 
+			var sceneInstance = SceneManager.Instance.sceneInstance as GameSceneInstance;
+
+			// 파티클 인스턴스 생성
+			var hitParticle = sceneInstance.GetParticleInstance(ParticleInstanceType.EnemyMissileHit) ??
+				sceneInstance.particlePool.RegisterRecyclableObject(
+					Instantiate(_EnemyMissileHitPrefab));
+
+			// 파티클 인스턴스 위치 설정
+			hitParticle.transform.position = (componentCauser??this).transform.position;
+
+			// 파티클 재생
+			hitParticle.PlayParticle();
+
 			// 피해량만큼 체력 감소
 			_Hp -= damage;
 
@@ -54,6 +82,7 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 				// 사망
 				OnCharacterDie();
 			}
+			else AudioManager.Instance.PlayAudio(_PlayerDamageSound, false, 0.3f);
 		};
 	}
 
@@ -84,6 +113,9 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 		characterDieParticle.transform.position = transform.position;
 		characterDieParticle.PlayParticle();
 
+		AudioManager.Instance.PlayAudio(_PlayerDieSound, false, 0.7f);
+
+		PlayerManager.Instance.playerController.ClearPlayerableCharacter();
 		Destroy(gameObject);
 	}
 }

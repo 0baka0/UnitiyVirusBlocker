@@ -107,29 +107,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a1bbdfb25bf8464f9ecc2cafe8c1761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BehaivorBeginDelay: 0
-  m_BehaivorFinalDelay: 0
+  m_BehaivorBeginDelay: 0.5
+  m_BehaivorFinalDelay: 0.5
   _MissileCount: 8
   _MissileFirePosition: {fileID: 2075529268199177211}
---- !u!95 &2075529267219884632
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3076532178906474977}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d006194959a49b347a6937c6d81d99bd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2075529268199177210
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,6 +141,25 @@ Transform:
   m_Father: {fileID: 2075529266437250506}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2075529267219884632
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3076532178906474977}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d006194959a49b347a6937c6d81d99bd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2075529267879515225
 PrefabInstance:
   m_ObjectHideFlags: 0

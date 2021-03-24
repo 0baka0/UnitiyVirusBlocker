@@ -19,6 +19,9 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 	[Header("공격력")]
 	[SerializeField] private float _Damage = 30.0f;
 
+	// 미사일 발사 효과음
+	private AudioClip _MissileFireAudioClip;
+
 	// 마지막 발사 시간을 나타냅니다.
 	private float _LastFiredTime;
 
@@ -41,15 +44,21 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 		_PlayerMissilePrefab = ResourceManager.Instance.LoadResource<GameObject>(
 			"PlayerMissile",
 			"Prefabs/Missile/PlayerMissile").GetComponent<PlayerMissile>();
+
+		// 미사일 발사 시 재생될 소리 로드
+		_MissileFireAudioClip = ResourceManager.Instance.LoadResource<AudioClip>(
+			"Player_Missile_Fire",
+			"Sound/Player_Missile_Fire");
 	}
 
 	private void Update()
 	{
 		FireMissile();
+		RechasrgeStamina();
 	}
 
-	private void RechargeStemina()
-    {
+	private void RechasrgeStamina()
+	{
 		// 스테미너에 채워질 값
 		float chargeValue = _Damage * Time.deltaTime;
 
@@ -57,7 +66,7 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 			_PlayerableCharacter.attackStemina + chargeValue,
 			0.0f,
 			_PlayerableCharacter.maxAttackStemina);
-    }
+	}
 
 	// 미사일을 발사시킵니다.
 	private void FireMissile()
@@ -75,7 +84,7 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 		}
 
 		// 미사일 오브젝트를 생성합니다.
-		PlayerMissile CreateMissileObject() => 
+		PlayerMissile CreateMissileObject() =>
 			_PlayerMissilePool.GetRecycleObject() ??
 			_PlayerMissilePool.RegisterRecyclableObject(Instantiate(_PlayerMissilePrefab));
 
@@ -95,8 +104,12 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 		// 스테미너 감소
 		_PlayerableCharacter.attackStemina -= _Damage;
 
+		// 미사일 효과음 재생
+		AudioManager.Instance.PlayAudio(
+			_MissileFireAudioClip, false, 0.3f, 1.0f, AudioType.Effect);
+
 		// 미사일 개수만큼 발사시킵니다.
-		for (int i = 0; i < _MissileCount; ++i )
+		for (int i = 0; i < _MissileCount; ++i)
 		{
 			// 발사 위치 회전
 			RotateFirePosition();
@@ -106,12 +119,10 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 			var newRightPlayerMissile = CreateMissileObject();
 
 			newLeftPlayerMissile.Fire(_MissileFireLeftPos.position,
-				_MissileFireLeftPos.forward, 10, damage);
+				_MissileFireLeftPos.forward, 10, _Damage);
 
 			newRightPlayerMissile.Fire(_MissileFireRightPos.position,
-				_MissileFireRightPos.forward, 10, damage);
+				_MissileFireRightPos.forward, 10, _Damage);
 		}
 	}
-
-
 }

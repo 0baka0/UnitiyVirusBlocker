@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityStartUpFramework.Util;
 
 public sealed class GameSceneInstance : 
-	SceneInstance
+	VBSceneInstance
 {
 	[Header("시작 전 딜레이")]
 	[Range(0.0f, 10.0f)]
@@ -42,7 +42,7 @@ public sealed class GameSceneInstance :
 
         StartStage();
     }
-
+   
     private void StartStage()
     {
         // 스포너를 시작시킵니다.

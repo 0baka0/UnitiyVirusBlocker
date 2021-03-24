@@ -4810,6 +4810,7 @@ MonoBehaviour:
   m_UseControlRotationPitch: 0
   m_UseControlRotationYaw: 1
   m_UseControlRotationRoll: 0
+  _InvincibleTime: 1
   _MaxHp: 100
   _Hp: 100
 --- !u!143 &8057618963697904451
@@ -4860,6 +4861,7 @@ MonoBehaviour:
   _MissileFireRightPos: {fileID: 1957020621924702840}
   _MissileCount: 10
   _MissileDelay: 0.3
+  _Damage: 20
 --- !u!1 &6126011725347327867
 GameObject:
   m_ObjectHideFlags: 0
