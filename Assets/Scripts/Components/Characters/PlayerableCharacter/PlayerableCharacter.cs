@@ -116,6 +116,10 @@ public sealed class PlayerableCharacter : PlayerableCharacterBase,
 		AudioManager.Instance.PlayAudio(_PlayerDieSound, false, 0.7f);
 
 		PlayerManager.Instance.playerController.ClearPlayerableCharacter();
+
+		(playerController.screenInstance as GameScreenInsatnce).ShowGameOverPanel();
+		
 		Destroy(gameObject);
+
 	}
 }

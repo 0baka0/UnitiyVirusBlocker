@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class VBSceneInstance :
+public class VBSceneInstance :
     SceneInstance
 {
     [SerializeField] private AudioClip _BgmAudioClip;
